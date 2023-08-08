@@ -1,17 +1,21 @@
 # Final-Project-Transforming-and-Analyzing-Data-with-SQL
 
 ## Project/Goals
-(fill in your description and goals here)
+Exploratory Data Analysis is the main goal of this project.
 
 ## Process
-### (your step 1)
-### (your step 2)
+### Create a new database called ecommerce and import data from csv files into database.
+### Data cleaning
+### Data analysis
 
 ## Results
-(fill in what you discovered this data could tell you and how you used the data to answer those questions)
+The analysis of the data revealed the distribution of product purchases over countries and cities.
+Popularity of product categories over countries and cities was also observed.
+The amount of visitors per channel can also be seen from analysis of the data. 
 
 ## Challenges 
-(discuss challenges you faced in the project)
+The greatest challenge was having to spend most of the time transforming and cleaning the data. The data contains highly improperly structured data, duplicates, nulls.
 
 ## Future Goals
-(what would you do if you had more time?)
+1. Review the normaliztion of the tables.
+2. Find answers to more questions to gain deeper insights into the dataset.

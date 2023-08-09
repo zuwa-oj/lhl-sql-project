@@ -9,7 +9,7 @@ Overall, the data was observed to contain an unusally high proportion of null en
 ### QA Process:
 Describe your QA process and include the SQL queries used to execute it.
 
-Data validation was carried out before proceeding to check for completeness, uniqueness and consistency.
+Data validation was carried out before analysis to check for completeness, uniqueness and consistency.
 
 Columns were inspected for uniqueness using the DISTINCT keyword and the product_sku column in the products table passed the uniqueness test so it could be assigned as the primary key on the products table.
 Other columns were identifed to contain duplicates including the full_visitor_id column which resulted in not satisfying constraints for being a primary key in the all_sessions table.

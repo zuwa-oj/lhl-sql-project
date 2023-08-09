@@ -1,4 +1,4 @@
-What are your risk areas? Identify and describe them.
+### What are your risk areas? Identify and describe them.
 
 The data was inspected and observed to be fully anonymized as it did not contain any personal user_id information, so there were no data privacy risks associated with the data set.
 
@@ -6,7 +6,7 @@ The data was observed to have many structural issues ranging from column names n
 
 Overall, the data was observed to contain an unusally high proportion of null entries and inconsistencies so the integrity of the data would not be expected to yield high confidence results after data analysis.
 
-QA Process:
+### QA Process:
 Describe your QA process and include the SQL queries used to execute it.
 
 Data validation was carried out before proceeding to check for completeness, uniqueness and consistency.
@@ -15,7 +15,7 @@ Columns were inspected for uniqueness using the DISTINCT keyword and the product
 Other columns were identifed to contain duplicates including the full_visitor_id column which resulted in not satisfying constraints for being a primary key in the all_sessions table.
 Completeness checks were carried out on columns by filtering for nulls before analysing the sales revenue data.
 
-Queries used:
+#### Queries used:
 
 ```SQL
 SELECT 'all_sessions' as table_name, 

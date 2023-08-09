@@ -4,7 +4,7 @@ The data was inspected and observed to be fully anonymized as it did not contain
 
 The data was observed to have many structural issues ranging from column names not stored in acceptable case; duplicate and null entries in different formats; and inconsistent units for time, and financial data.
 
-Overall, the data was observed to contain an unusally high proportion of null entries and inconsistencies so the integrity of the data would not be expected to yield high confidence results after data analysis.
+Overall, the data was observed to contain an unusually high proportion of null entries and inconsistencies so the integrity of the data would not be expected to yield high confidence results after data analysis.
 
 ### QA Process:
 Describe your QA process and include the SQL queries used to execute it.

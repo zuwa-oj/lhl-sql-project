@@ -5,7 +5,8 @@ What issues will you address by cleaning the data?
 
 Query used:
 ```SQL
-SELECT DATE(date) AS clean_date
+SELECT 
+        DATE(date) AS clean_date
 FROM all_sessions
 ```
 
@@ -14,7 +15,8 @@ FROM all_sessions
 
 Query used:
 ```SQL
-SELECT TO_CHAR(TO_TIMESTAMP(time), 'HH:MI:SS AM') 
+SELECT 
+	    TO_CHAR(TO_TIMESTAMP(time), 'HH:MI:SS AM') clean_time 
 FROM all_sessions
 ```
 
@@ -25,8 +27,9 @@ Filtering and cleaning revenue to the right units
 
 Query used:
 ```SQL
-SELECT total_transaction_revenue, 
-		ROUND((total_transaction_revenue / 1000000), 2) clean_total_revenue
+SELECT 
+        total_transaction_revenue, 
+	    ROUND((total_transaction_revenue / 1000000), 2) clean_total_revenue
 FROM all_sessions
 WHERE total_transaction_revenue IS NOT NULL
 ```
@@ -35,8 +38,9 @@ Filtering and cleaning product_price to the right units
 
 Query used:
 ```SQL
-SELECT product_price, 
-		ROUND((product_price / 1000000), 2) product_price_clean
+SELECT 
+        product_price, 
+	    ROUND((product_price / 1000000), 2) product_price_clean
 FROM all_sessions
 WHERE product_price IS NOT NULL
 ```
@@ -45,7 +49,9 @@ Filtering and cleaning unit_price to the right units
 
 Query used:
 ```SQL
-SELECT unit_price, ROUND((unit_price / 1000000), 2) unit_price_clean
+SELECT 
+        unit_price, 
+        ROUND((unit_price / 1000000), 2) unit_price_clean
 FROM analytics
 WHERE unit_price IS NOT NULL
 ```

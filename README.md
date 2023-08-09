@@ -17,5 +17,5 @@ The amount of visitors per channel can also be seen from analysis of the data.
 The greatest challenge was having to spend most of the time transforming and cleaning the data. The data contains highly improperly structured data, duplicates, nulls.
 
 ## Future Goals
-1. Review the normaliztion of the tables.
+1. Review the normalization of the tables.
 2. Find answers to more questions to gain deeper insights into the dataset.

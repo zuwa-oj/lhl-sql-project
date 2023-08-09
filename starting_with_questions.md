@@ -6,21 +6,30 @@ Answer the following questions and provide the SQL queries used to find the answ
 
 SQL Queries:
 ```sql
-SELECT CASE WHEN country IN ('(not set)', 'not available in demo dataset')
-			THEN NULL
-			ELSE country
-		END AS country, 
+WITH clean_cte AS
+(	
+	SELECT 
+		CASE WHEN country IN ('(not set)', 'not available in demo dataset')
+				THEN NULL
+				ELSE country
+		END AS country,
 		CASE WHEN city IN ('(not set)', 'not available in demo dataset')
 				THEN (CASE WHEN country NOT IN ('(not set)', 'not available in demo dataset')
 						 	THEN country
 					 END)
 			ELSE COALESCE(city, country)
-		END AS city, 
-		MAX(total_transaction_revenue/1000000) tot
-FROM all_sessions
+		END AS city,
+		ROUND((total_transaction_revenue / 1000000), 2) total_transaction_revenue
+	FROM all_sessions
+	WHERE total_transaction_revenue IS NOT NULL
+)
+SELECT 
+	country, 
+	city, 
+	MAX(total_transaction_revenue) max_total_revenue
+FROM clean_cte
 GROUP BY country, city
-HAVING MAX(total_transaction_revenue) IS NOT NULL
-ORDER BY MAX(total_transaction_revenue) DESC
+ORDER BY max_total_revenue DESC
 ```
 
 
@@ -34,21 +43,30 @@ The highest transaction revenue was observed to be from United States with a wid
 
 SQL Queries:
 ```sql
-SELECT CASE WHEN country IN ('(not set)', 'not available in demo dataset')
-			THEN NULL
-			ELSE country
-		END AS country, 
-		CASE WHEN city IN ('(not set)', 'not available in demo dataset')
-				THEN (CASE WHEN country NOT IN ('(not set)', 'not available in demo dataset')
-						 	THEN country
-					 END)
-			ELSE COALESCE(city, country)
-		END AS city, 
-		AVG(ordered_quantity)
-FROM all_sessions
-JOIN products USING(product_sku)
-GROUP BY country, city
-ORDER BY country
+WITH all_sessions_clean AS
+	(	
+		SELECT 
+			CASE WHEN country IN ('(not set)', 'not available in demo dataset')
+					THEN NULL
+					ELSE country
+			END AS country,
+			CASE WHEN city IN ('(not set)', 'not available in demo dataset')
+					THEN (CASE WHEN country NOT IN ('(not set)', 'not available in demo dataset')
+								THEN country
+						 END)
+				ELSE COALESCE(city, country)
+			END AS city,
+			product_sku
+		FROM all_sessions
+	)
+SELECT 
+	al.country, 
+	al.city, 
+	ROUND(AVG(pr.ordered_quantity)) average_product_quantity
+FROM all_sessions_clean al
+JOIN products pr USING(product_sku)
+GROUP BY al.country, al.city
+ORDER BY al.country
 ```
 
 
@@ -63,20 +81,32 @@ The average number of products ordered from visitors in each city and country we
 
 SQL Queries:
 ```sql
-SELECT CASE WHEN country IN ('(not set)', 'not available in demo dataset')
-			THEN NULL
-			ELSE country
-		END AS country, 
+WITH clean_cte AS
+(	
+	SELECT 
+		CASE WHEN country IN ('(not set)', 'not available in demo dataset')
+				THEN NULL
+				ELSE country
+		END AS country,
 		CASE WHEN city IN ('(not set)', 'not available in demo dataset')
 				THEN (CASE WHEN country NOT IN ('(not set)', 'not available in demo dataset')
 						 	THEN country
 					 END)
 			ELSE COALESCE(city, country)
-		END AS city, v2_product_category, 
-		COUNT(v2_product_category) 
-				OVER (PARTITION BY v2_product_category
-						) AS category_count
-FROM all_sessions
+		END AS city,
+		CASE WHEN v2_product_category IN ('(not set)', '${escCatTitle}')
+				THEN NULL
+				ELSE v2_product_category
+		END AS v2_product_category	
+	FROM all_sessions
+	WHERE v2_product_category IS NOT NULL
+)
+SELECT 
+	country, 
+	city, 
+	v2_product_category,
+	COUNT(v2_product_category) OVER (PARTITION BY v2_product_category) AS category_count
+FROM clean_cte
 ORDER BY category_count DESC
 ```
 
@@ -92,8 +122,10 @@ It was observed that the highest performing product category was the most popula
 
 SQL Queries:
 ```sql
-WITH product_cte AS 
-(SELECT CASE WHEN country IN ('(not set)', 'not available in demo dataset')
+WITH all_sessions_cte AS 
+(
+	SELECT 
+		CASE WHEN country IN ('(not set)', 'not available in demo dataset')
 			THEN NULL
 			ELSE country
 		END AS country, 
@@ -103,19 +135,19 @@ WITH product_cte AS
 					 END)
 			ELSE COALESCE(city, country)
 		END AS city, 
-		v2_product_name, 
-		COUNT(v2_product_name) 
-				OVER (PARTITION BY v2_product_name
-						) AS product_count
-FROM all_sessions
-ORDER BY product_count DESC, country)
-SELECT country, city, 
-		v2_product_name product_name,
-		product_count max_sold
-FROM product_cte 
-GROUP BY country, city, product_name, max_sold 
-HAVING product_count = max(product_count)
-ORDER BY product_count DESC, country
+		v2_product_name product_name, 
+		COUNT(v2_product_name) OVER (PARTITION BY v2_product_name) AS product_count
+	FROM all_sessions
+	ORDER BY product_count DESC, country
+)
+SELECT 
+	country, 
+	city, 
+	product_name,
+	MAX(product_count) max_sold
+FROM all_sessions_cte 
+GROUP BY country, city, product_name, product_count 
+ORDER BY max_sold DESC, country
 ```
 
 
@@ -129,20 +161,29 @@ The top-selling product from a wide range of cities and countries was observed t
 
 SQL Queries:
 ```sql
-SELECT CASE WHEN country IN ('(not set)', 'not available in demo dataset')
-			THEN NULL
-			ELSE country
-		END AS country, 
+WITH clean_cte AS
+(	
+	SELECT 
+		CASE WHEN country IN ('(not set)', 'not available in demo dataset')
+				THEN NULL
+				ELSE country
+		END AS country,
 		CASE WHEN city IN ('(not set)', 'not available in demo dataset')
 				THEN (CASE WHEN country NOT IN ('(not set)', 'not available in demo dataset')
 						 	THEN country
 					 END)
 			ELSE COALESCE(city, country)
-		END AS city, 
- 		SUM(total_transaction_revenue/1000000) sum_total_revenue
-FROM all_sessions
+		END AS city,
+		ROUND((total_transaction_revenue / 1000000), 2) total_revenue
+	FROM all_sessions
+	WHERE total_transaction_revenue IS NOT NULL
+)
+SELECT 
+	country, 
+	city, 
+	SUM(total_revenue) sum_total_revenue
+FROM clean_cte
 GROUP BY country, city
-HAVING SUM(total_transaction_revenue/1000000) IS NOT NULL
 ORDER BY sum_total_revenue DESC
 ```
 
